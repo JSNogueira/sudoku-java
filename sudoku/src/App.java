@@ -1,5 +1,7 @@
+import java.util.List;
 import java.util.Scanner;
 
+import model.Celula;
 import model.Tabuleiro;
 
 public class App {
@@ -8,42 +10,65 @@ public class App {
 
     private static Tabuleiro tabuleiro = new Tabuleiro();
     private static int[][] tab;
+    private static List<Celula> celulas = tabuleiro.preencherCelulas();
  
+    private static String mensagem = "";
+
     public static void main(String[] args) throws Exception {
 
-         while (true){
+        while (true){
+            if(tab != null){
+                clearConsole();
+                tabuleiro.exibirTabuleiro(tab);
+            }
+            if(mensagem != ""){
+                System.out.println("\n" + mensagem);
+                mensagem = "";
+            } 
             System.out.println();
-            System.out.println("Selecione uma opção");
+            System.out.println("Selecione uma opção:\n");
             System.out.println("1 - Iniciar um novo jogo");
             System.out.println("2 - Inserir número");
             System.out.println("3 - Remover número");
-            System.out.println("4 - Visualizar jogo atual");
-            System.out.println("5 - Verificar status do jogo");
-            System.out.println("6 - Reiniciar o jogo atual");
-            System.out.println("7 - Finalizar jogo");
-            System.out.println("8 - Sair");
+            System.out.println("4 - Verificar status do jogo");
+            System.out.println("5 - Reiniciar o jogo atual");
+            System.out.println("6 - Finalizar jogo");
+            System.out.println("7 - Sair");
 
             int option = scanner.nextInt();
 
             switch (option){
-                case 1 -> iniciarJogo();
-                case 2 -> inserirNumero();
-                case 3 -> removerNumero();
-                case 4 -> exibirTabuleiro();
-                case 5 -> exibirStatus();
-                case 6 -> reiniciarJogo();
-                case 7 -> finalizarJogo();
-                case 8 -> System.exit(0);
-                default -> System.out.println("Opção inválida, selecione uma das opções do menu");
+                case 1: 
+                    iniciarJogo();
+                    break;
+                case 2: 
+                    inserirNumero();
+                    break;
+                case 3: 
+                    removerNumero();
+                    break;
+                case 4: 
+                    exibirStatus();
+                    break;
+                case 5: 
+                    reiniciarJogo();
+                    break;
+                case 6: 
+                    finalizarJogo();
+                    break;
+                case 7:
+                     System.exit(0);
+                     break;
+                default: 
+                    clearConsole();
+                    mensagem = "Opção inválida, selecione uma das opções do menu";
             }
         }
 
     }
 
     private static void iniciarJogo(){
-        clearConsole();
-        tab = tabuleiro.iniciarTabuleiro();
-        tabuleiro.exibirTabuleiro(tab);
+        tab = tabuleiro.iniciarTabuleiro(celulas);
     }
 
     private static void inserirNumero() {
@@ -51,60 +76,72 @@ public class App {
             clearConsole();
             tabuleiro.exibirTabuleiro(tab);
             System.out.println("Digite a linha, a coluna e o valor a ser inserido:");
-            String valor = scanner.next();
+            String valores = scanner.next();
+            int linha = Integer.parseInt(String.valueOf(valores.charAt(0)));
+            int coluna = Integer.parseInt(String.valueOf(valores.charAt(1)));
+            int valor = Integer.parseInt(String.valueOf(valores.charAt(2)));
+            if(tabuleiro.verificarCelulaFixa(celulas, linha, coluna)){
+                tab[linha][coluna] = valor;
+                mensagem = "Valor inserido.";
+            } else {
+                mensagem = "Essa célula é fixa, selecione outra célula.";
+            }
         } else {
             clearConsole();
-            System.out.println("Jogo não iniciado! Inicie um jogo primeiro.");
+            mensagem = "Jogo não iniciado! Inicie um jogo primeiro.";
         }
     }
 
     private static void removerNumero() {
         if(tab != null){
             clearConsole();
-            
+            tabuleiro.exibirTabuleiro(tab);
+            System.out.println("Digite a linha e a coluna: ");
+            String valores = scanner.next();
+            int linha = Integer.parseInt(String.valueOf(valores.charAt(0)));
+            int coluna = Integer.parseInt(String.valueOf(valores.charAt(1)));
+            if(tabuleiro.verificarCelulaFixa(celulas, linha, coluna)){
+                tab[linha][coluna] = 0;
+                mensagem = "Valor removido.";
+            } else {
+                mensagem = "Essa célula é fixa, esse valor não pode ser removido.";
+            }
         } else {
             clearConsole();
-            System.out.println("Jogo não iniciado! Inicie um jogo primeiro.");
-        }
-    }
-
-    private static void exibirTabuleiro() {
-        if(tab != null){
-            clearConsole();
-            
-        } else {
-            clearConsole();
-            System.out.println("Jogo não iniciado! Inicie um jogo primeiro.");
+            mensagem = "Jogo não iniciado! Inicie um jogo primeiro.";
         }
     }
 
     private static void exibirStatus() {
         if(tab != null){
             clearConsole();
+            tabuleiro.exibirTabuleiro(tab);
             
         } else {
             clearConsole();
-            System.out.println("Jogo não iniciado! Inicie um jogo primeiro.");
+            mensagem = "Jogo não iniciado! Inicie um jogo primeiro.";
         }
     }
 
     private static void reiniciarJogo() {
         if(tab != null){
             clearConsole();
+            tabuleiro.exibirTabuleiro(tab);
             
         } else {
             clearConsole();
-            System.out.println("Jogo não iniciado! Inicie um jogo primeiro.");
+            mensagem = "Jogo não iniciado! Inicie um jogo primeiro.";
         }
     }
 
     private static void finalizarJogo() {
         if(tab != null){
             clearConsole();
+            tabuleiro.exibirTabuleiro(tab);
             
         } else {
             clearConsole();
-            System.out.println("Jogo não iniciado! Inicie um jogo primeiro.");
+            mensagem = "Jogo não iniciado! Inicie um jogo primeiro.";
         }
     }
 
